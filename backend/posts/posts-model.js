@@ -1,9 +1,13 @@
 const mongoose = require('mongoose');
 const blogPostSchema = mongoose.Schema({
-  date: Date,
-  title: String,
-  author: String,
-  text: String
+  date: {type: String, required: true},
+  title: {type: String, required: true},
+  author: {type: String, required: true},
+  content: {type: String, required: true},
+  categories: {type: String, required: true},
+  comments: {type: String, required: true},
+  description: {type: String, required: true},
+  image: {type: String, required: true}
 });
 
 //First argument is name of model, second argument is schema
