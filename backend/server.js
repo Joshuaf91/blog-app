@@ -1,43 +1,46 @@
+/////////////////////////
+//Server - starts our app's database connection and server
+/////////////////////////
+
 const express = require('express');
+
+// an instance of an express server
 const app = express();
+
+// links js to mongodb
 const mongoose = require('mongoose');
-require('./posts/posts-model');
-const Post = mongoose.model('Post');
 
-mongoose.connect('mongodb://localhost/blog-app-test');
 
+
+const path = require('path')
+const rootPath = path.join(__dirname, '../../')
+var bodyParser = require('body-parser');
+
+
+//Require in models:
+//(this is a necessary step that loads our models and registers them with mongoose)
+const models = require('./index').models;
+
+//Require in routes:
+const routes = require('./index').routes;
+
+//Connect to database and start server:
+//(whatever we put after 'localhost/' will automatically be the name of database)
+mongoose.connect('mongodb://localhost/blog-app');
+
+//Store connection as variable
 const db = mongoose.connection;
 
-app.get('/', (req, res) => {
-  res.send('Hey from the HOME page');
-});
-
-app.get('/posts', (req, res) => {
-  res.send('Hey from the POSTS page');
-});
-
+//Start the server after successful database connection:
 db.on('open', () => {
-  console.log('db connection opened!');
 
-  app.listen(5555, () => {
-    console.log('Listening on port 5555');
-    
-    Post.create({
-        date: 'November 5, 2016',
-        title: 'New Post With Joshua',
-        author: 'The Devil',
-        content: 'Hello! Welcome to the third layer of Hell. Joshua is the President and CEO.', 
-        categories: 'hell, joshua fermin, devil, evil',
-        comments: "I love this blog",
-        description: "This is the first blog about Joshua F.",
-        image: "https://s16.postimg.org/tnjfuliv9/trump_thank_you_bigly.jpg"
-        }, (err, data) => {
-      if(err) console.log('Error with database!');
-      else console.log('Post created!');
-    })
-
-    setTimeout( () => {Post.find({}, (err, data) => {
-              console.log('Database data found!', data);
-            })},1)
+  // checks these routes sequentialy
+  app.use(bodyParser.urlencoded({ extended: false }));
+  app.use(express.static('assets'))
+  app.use('/posts', routes.posts);
+  app.use('*', routes.home);
+  //Launch server on port 4444:
+  app.listen(4444, () => {
+    console.log('App listening on port 4444');
   });
 });
