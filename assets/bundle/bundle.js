@@ -60,8 +60,6 @@
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
-	function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-	
 	var NewPostForm = _react2.default.createClass({
 		displayName: 'NewPostForm',
 		getInitialState: function getInitialState() {
@@ -73,7 +71,9 @@
 		},
 		handleChange: function handleChange(change, event) {
 			console.log("handleingchange for", change);
-			this.setState(_defineProperty({}, change, event.target.value));
+			var newData = Object.assign({}, this.state.newData);
+			newData[change] = event.target.value;
+			this.setState({ newData: newData });
 		},
 		getOldPost: function getOldPost() {
 			console.log('im in getOldPost');
@@ -83,33 +83,34 @@
 				type: 'GET',
 				success: function success(data) {
 					console.log(data);
-					that.setState({ data: data, newData: { title: "", body: "", author: "" } });
+					that.setState({ data: data });
 				}
 			});
 		},
 		makeNewPost: function makeNewPost(event) {
 			console.log("im in makeNewPost");
 			event.preventDefault();
-			var body = this.state.newdata;
+			var body = this.state.newData;
 			_jquery2.default.ajax({
 				url: '/posts',
 				type: 'POST',
-				data: { post: body }
+				data: body
 			});
-			setTimeout(this.getOldPost(), 1000);
+			setTimeout(this.getOldPost(), 5000);
 		},
 		render: function render() {
+			console.log("STate", this.state);
 			return _react2.default.createElement(
 				'div',
 				null,
 				_react2.default.createElement(
 					'form',
 					{ onSubmit: this.makeNewPost },
-					_react2.default.createElement('input', { type: 'text', placeholder: 'Title', onChange: this.handleChange.bind(this, 'title'), value: this.state.title }),
+					_react2.default.createElement('input', { type: 'text', placeholder: 'Title', onChange: this.handleChange.bind(this, 'title'), value: this.state.newData.title }),
 					_react2.default.createElement('br', null),
-					_react2.default.createElement('input', { type: 'text', placeholder: 'author', onChange: this.handleChange.bind(this, 'author'), value: this.state.author }),
+					_react2.default.createElement('input', { type: 'text', placeholder: 'author', onChange: this.handleChange.bind(this, 'author'), value: this.state.newData.author }),
 					_react2.default.createElement('br', null),
-					_react2.default.createElement('input', { type: 'text', placeholder: 'body', onChange: this.handleChange.bind(this, 'body'), value: this.state.body }),
+					_react2.default.createElement('input', { type: 'text', placeholder: 'body', onChange: this.handleChange.bind(this, 'body'), value: this.state.newData.body }),
 					_react2.default.createElement('br', null),
 					_react2.default.createElement('input', { type: 'submit' })
 				),

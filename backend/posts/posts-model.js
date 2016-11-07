@@ -1,9 +1,9 @@
 const mongoose = require('mongoose');
 const blogPostSchema = mongoose.Schema({
-  // date: {type: String, required: true},
+  date: {type: Date, required: true, default: Date.now},
   title: {type: String, required: true},
-  // author: {type: String, required: true},
-  // content: {type: String, required: true},
+  author: {type: String, required: true},
+  content: {type: String, required: true},
   // categories: {type: String, required: true},
   // comments: {type: String, required: true},
   // description: {type: String, required: true},

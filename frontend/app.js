@@ -13,7 +13,9 @@ const NewPostForm = React.createClass({
 	},
 	handleChange(change, event){
 		console.log("handleingchange for" ,change);
-		this.setState({newData[change]: event.target.value})
+		var newData = Object.assign({}, this.state.newData)
+		newData[change] = event.target.value;
+		this.setState({newData: newData})
 	},
 	getOldPost(){
 		console.log('im in getOldPost')
@@ -23,7 +25,7 @@ const NewPostForm = React.createClass({
 			type: 'GET',
 			success(data){
 				console.log(data)
-				that.setState({data:data, });
+				that.setState({data:data});
 			}
 		})
 
@@ -31,13 +33,13 @@ const NewPostForm = React.createClass({
 	makeNewPost(event){
 		console.log("im in makeNewPost")
 		event.preventDefault();
-		var body = this.state.newdata;
+		var body = this.state.newData;
 		$.ajax({
 			url: '/posts',
 			type: 'POST',
-			data: {post: body}
+			data: body
 		})
-		setTimeout(this.getOldPost(), 1000);
+		setTimeout(this.getOldPost(), 5000);
 	},
 	render(){
 		console.log("STate",this.state)

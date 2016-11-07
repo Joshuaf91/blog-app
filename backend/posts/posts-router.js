@@ -15,8 +15,13 @@ const getPosts = (req, res) => {
 
 //Create a new test post in database
 const postPosts = (req, res) => {
-  console.log(req.body);
-  Post.create({title: req.body.post, test: 'sucessfully created a test post'}, (err) => {
+  console.log("line 18",req.body);
+  Post.create({
+                title: req.body.title,
+                author: req.body.author,
+                content: req.body.body
+              },
+     (err) => {
   		if(err)console.log("bad request", req.body)
   		else console.log('post successfully created')
   });
